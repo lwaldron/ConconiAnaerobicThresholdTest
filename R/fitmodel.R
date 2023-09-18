@@ -58,7 +58,8 @@ prepdata <-
         x = trackeR::readTCX(fname)
         x = arrange(x, time) |>
             mutate(minutes = as.numeric((time - time[1]) / 60)) |>
-            filter(minutes >= startminutes & minutes <= endminutes)
+            filter(minutes >= startminutes & minutes <= endminutes) |>
+            mutate(minutes = minutes - min(minutes))
         endminutes <- min(endminutes, max(x$minutes))
         if (!useDeviceSpeed) {
             calcspeed <- (floor((x$minutes - min(x$minutes) + .001) / timestep) * speedstep) + speedmin
