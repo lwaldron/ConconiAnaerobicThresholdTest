@@ -2,8 +2,8 @@ Package: TreadmillFitnessTest
 Type: Package
 Title: Estimate Anaerobic Threshold From A Treadmill Stepwise Fitness Test
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Author: Levi Waldron
+Maintainer: Levi Waldron <levi.waldron@sph.cuny.edu>
 Description: This package is for analyzing data from a treadmill fitness test
     where speed is augmented by a constant amount every set number of seconds, to 
     estimate the anaerobic (lactate) threshold speed and heart rate. It reads a tcx 
