@@ -1,0 +1,85 @@
+---
+title: "Analysis of treadmill fitness test data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analysis of treadmill fitness test data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6.5,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(TreadmillFitnessTest)
+```
+
+# January 2023
+
+## Example of how to figure out startminutes and endminutes
+
+```{r}
+fname = system.file("extdata/2023-01-16.tcx", package = "TreadmillFitnessTest")
+tmp <- prepdata(fname, startminutes = 0, endminutes = 100,
+          useDeviceSpeed = TRUE)
+plot(tmp$minutes, tmp$speed)
+plot(tmp$minutes, tmp$cadence_running)
+plot(tmp$minutes, tmp$heart_rate)
+```
+
+
+## Real data import
+
+```{r}
+dat202301 <- prepdata(fname, startminutes = 0.15, endminutes = 15,
+          useDeviceSpeed = FALSE)
+(dat202301$date = substr(dat202301$time[1], 1, 10))
+```
+
+```{r}
+plot(dat202301$minutes, dat202301$speed)
+plot(dat202301$minutes, dat202301$cadence_running)
+plot(dat202301$minutes, dat202301$heart_rate)
+```
+
+## Model fitting
+
+```{r}
+fitmodel(dat202301, alldata = TRUE)
+fitmodel(dat202301, alldata = FALSE)
+```
+
+# Sept 15, 2023
+
+```{r}
+fname = system.file("extdata/2023-09-15.tcx", package = "TreadmillFitnessTest")
+dat202309 <- prepdata(fname, startminutes = 23.8, endminutes = 40.3,
+          useDeviceSpeed = FALSE)
+dat202309$date = substr(dat202309$time[1], 1, 10)
+with(dat202309, plot(minutes, speed))
+```
+
+## Model fitting
+
+```{r}
+fitmodel(dat202309, alldata = TRUE)
+fitmodel(dat202309, alldata = FALSE)
+```
+
+
+# 2022-23 together
+
+```{r, fig.width=6.5, fig.height=6.3}
+xall <- full_join(x=dat202309, y=dat202301) %>%
+    mutate(date = factor(date)) %>%
+    mutate(speed = factor(speed))
+ggplot(xall, aes(x=speed, y=heart_rate, fill = date)) +
+    geom_boxplot()  +
+    scale_y_continuous(breaks=seq(90, 200, by=10))
+```
+
