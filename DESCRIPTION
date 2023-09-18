@@ -20,3 +20,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+URL: https://lwaldron.github.io/TreadmillFitnessTest/
