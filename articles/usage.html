@@ -73,11 +73,10 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lwaldron.github.io/TreadmillFitnessTest/">TreadmillFitnessTest</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="january-2023">January 2023<a class="anchor" aria-label="anchor" href="#january-2023"></a>
+<h2 id="how-to-figure-out-startminutes-and-endminutes">How to figure out startminutes and endminutes<a class="anchor" aria-label="anchor" href="#how-to-figure-out-startminutes-and-endminutes"></a>
 </h2>
-<div class="section level3">
-<h3 id="example-of-how-to-figure-out-startminutes-and-endminutes">Example of how to figure out startminutes and endminutes<a class="anchor" aria-label="anchor" href="#example-of-how-to-figure-out-startminutes-and-endminutes"></a>
-</h3>
+<p>Useful in case the run was started before the start of the actual
+step test, or ended after.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fname</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/2023-01-16.tcx"</span>, package <span class="op">=</span> <span class="st">"TreadmillFitnessTest"</span><span class="op">)</span></span>
 <span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepdata.html">prepdata</a></span><span class="op">(</span><span class="va">fname</span>, startminutes <span class="op">=</span> <span class="fl">0</span>, endminutes <span class="op">=</span> <span class="fl">100</span>,</span>
@@ -90,10 +89,15 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">$</span><span class="va">minutes</span>, <span class="va">tmp</span><span class="op">$</span><span class="va">heart_rate</span><span class="op">)</span></span></code></pre></div>
 <p><img src="usage_files/figure-html/unnamed-chunk-2-3.png" width="624"></p>
+<p>By iteratively adjusting the <code>startminutes</code> and
+<code>endminutes</code> and replotting, or just replotting with adjusted
+axes, I found that the correct start time was at 0.15 minutes and
+correct end time at 15 minutes.</p>
 </div>
-<div class="section level3">
-<h3 id="real-data-import">Real data import<a class="anchor" aria-label="anchor" href="#real-data-import"></a>
-</h3>
+<div class="section level2">
+<h2 id="january-2023-test">January 2023 test<a class="anchor" aria-label="anchor" href="#january-2023-test"></a>
+</h2>
+<p>Import the data and show the same plots.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat202301</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepdata.html">prepdata</a></span><span class="op">(</span><span class="va">fname</span>, startminutes <span class="op">=</span> <span class="fl">0.15</span>, endminutes <span class="op">=</span> <span class="fl">15</span>,</span>
 <span>          useDeviceSpeed <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -108,78 +112,87 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dat202301</span><span class="op">$</span><span class="va">minutes</span>, <span class="va">dat202301</span><span class="op">$</span><span class="va">heart_rate</span><span class="op">)</span></span></code></pre></div>
 <p><img src="usage_files/figure-html/unnamed-chunk-4-3.png" width="624"></p>
-</div>
 <div class="section level3">
 <h3 id="model-fitting">Model fitting<a class="anchor" aria-label="anchor" href="#model-fitting"></a>
 </h3>
+<p>This model uses all available data points:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fitmodel.html">fitmodel</a></span><span class="op">(</span><span class="va">dat202301</span>, alldata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Threshold alpha: 11.8861748818112"</span></span>
+<span><span class="co">#&gt; [1] "Threshold alpha: 11.8861748818123"</span></span>
 <span><span class="co">#&gt; [1] ""</span></span>
 <span><span class="co">#&gt; [1] "Model coefficients: Beta[0], Beta[1], Beta[2]"</span></span>
 <span><span class="co">#&gt; (Intercept)           x           w </span></span>
 <span><span class="co">#&gt;   63.027275    9.167789   -5.201732</span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p><img src="usage_files/figure-html/unnamed-chunk-5-1.png" width="624"></p>
+<p>And this model uses only the final 5 measurements in each step:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fitmodel.html">fitmodel</a></span><span class="op">(</span><span class="va">dat202301</span>, alldata <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Threshold alpha: 12.3957752900054"</span></span>
+<span><span class="co">#&gt; [1] "Threshold alpha: 12.3957752900061"</span></span>
 <span><span class="co">#&gt; [1] ""</span></span>
 <span><span class="co">#&gt; [1] "Model coefficients: Beta[0], Beta[1], Beta[2]"</span></span>
 <span><span class="co">#&gt; (Intercept)           x           w </span></span>
 <span><span class="co">#&gt;   73.750685    8.211093   -4.847104</span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
-<p><img src="usage_files/figure-html/unnamed-chunk-5-2.png" width="624"></p>
+<p><img src="usage_files/figure-html/unnamed-chunk-6-1.png" width="624"></p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="sept-15-2023">Sept 15, 2023<a class="anchor" aria-label="anchor" href="#sept-15-2023"></a>
+<h2 id="sept-15-2023-test">Sept 15, 2023 test<a class="anchor" aria-label="anchor" href="#sept-15-2023-test"></a>
 </h2>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fname</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/2023-09-15.tcx"</span>, package <span class="op">=</span> <span class="st">"TreadmillFitnessTest"</span><span class="op">)</span></span>
-<span><span class="va">dat202309</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepdata.html">prepdata</a></span><span class="op">(</span><span class="va">fname</span>, startminutes <span class="op">=</span> <span class="fl">23.8</span>, endminutes <span class="op">=</span> <span class="fl">40.3</span>,</span>
+<span><span class="va">dat202309</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepdata.html">prepdata</a></span><span class="op">(</span><span class="va">fname</span>, startminutes <span class="op">=</span> <span class="fl">23.8</span>, endminutes <span class="op">=</span> <span class="fl">40.1</span>,</span>
 <span>          useDeviceSpeed <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">dat202309</span><span class="op">$</span><span class="va">date</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="va">dat202309</span><span class="op">$</span><span class="va">time</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">dat202309</span>, <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">minutes</span>, <span class="va">speed</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="usage_files/figure-html/unnamed-chunk-6-1.png" width="624"></p>
+<p><img src="usage_files/figure-html/unnamed-chunk-7-1.png" width="624"></p>
 <div class="section level3">
 <h3 id="model-fitting-1">Model fitting<a class="anchor" aria-label="anchor" href="#model-fitting-1"></a>
 </h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fitmodel.html">fitmodel</a></span><span class="op">(</span><span class="va">dat202309</span>, alldata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Threshold alpha: 14.6243748503586"</span></span>
+<span><span class="co">#&gt; [1] "Threshold alpha: 14.5862765638889"</span></span>
 <span><span class="co">#&gt; [1] ""</span></span>
 <span><span class="co">#&gt; [1] "Model coefficients: Beta[0], Beta[1], Beta[2]"</span></span>
 <span><span class="co">#&gt; (Intercept)           x           w </span></span>
-<span><span class="co">#&gt;   76.921891    7.205030   -5.465262</span></span>
+<span><span class="co">#&gt;   76.921892    7.205029   -4.961977</span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
-<p><img src="usage_files/figure-html/unnamed-chunk-7-1.png" width="624"></p>
+<p><img src="usage_files/figure-html/unnamed-chunk-8-1.png" width="624"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fitmodel.html">fitmodel</a></span><span class="op">(</span><span class="va">dat202309</span>, alldata <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Threshold alpha: 14.5668926097975"</span></span>
+<span><span class="co">#&gt; [1] "Threshold alpha: 14.344221689494"</span></span>
 <span><span class="co">#&gt; [1] ""</span></span>
 <span><span class="co">#&gt; [1] "Model coefficients: Beta[0], Beta[1], Beta[2]"</span></span>
 <span><span class="co">#&gt; (Intercept)           x           w </span></span>
-<span><span class="co">#&gt;   82.813882    6.879499   -6.479541</span></span>
+<span><span class="co">#&gt;   82.813864    6.879501   -4.279486</span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
-<p><img src="usage_files/figure-html/unnamed-chunk-7-2.png" width="624"></p>
+<p><img src="usage_files/figure-html/unnamed-chunk-8-2.png" width="624"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="together">2022-23 together<a class="anchor" aria-label="anchor" href="#together"></a>
 </h2>
+<p>Some plots demonstrating comparison of two tests. First join the two
+data.frames, and convert date and speed to factors (to make plots appear
+the way I want them to).</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">xall</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">full_join</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">dat202309</span>, y<span class="op">=</span><span class="va">dat202301</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">xall</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">full_join</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">dat202309</span>, y<span class="op">=</span><span class="va">dat202301</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>speed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">speed</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(time, latitude, longitude, altitude, distance,</span></span>
 <span><span class="co">#&gt; heart_rate, speed, cadence_running, cadence_cycling, power, temperature,</span></span>
-<span><span class="co">#&gt; minutes, date)`</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">xall</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">speed</span>, y<span class="op">=</span><span class="va">heart_rate</span>, fill <span class="op">=</span> <span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="co">#&gt; minutes, date)`</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="boxplot-of-heart-rate-vs-speed">Boxplot of heart rate vs speed<a class="anchor" aria-label="anchor" href="#boxplot-of-heart-rate-vs-speed"></a>
+</h3>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">xall</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">speed</span>, y<span class="op">=</span><span class="va">heart_rate</span>, fill <span class="op">=</span> <span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span>  <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">90</span>, <span class="fl">200</span>, by<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="usage_files/figure-html/unnamed-chunk-8-1.png" width="624"></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p><img src="usage_files/figure-html/unnamed-chunk-10-1.png" width="624">
+## Scatterplot with Loess smoothing curve for heart rate vs speed</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">xall</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">minutes</span>, y <span class="op">=</span> <span class="va">heart_rate</span>, color <span class="op">=</span> <span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>  <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -189,7 +202,24 @@
 <span>                                            name <span class="op">=</span> <span class="st">"speed (km/h)"</span>, </span>
 <span>                                            breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">16</span>, by <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span></span></code></pre></div>
-<p><img src="usage_files/figure-html/unnamed-chunk-9-1.png" width="624"></p>
+<p><img src="usage_files/figure-html/unnamed-chunk-11-1.png" width="624"></p>
+</div>
+<div class="section level3">
+<h3 id="scatterplot-with-loess-smoothing-curve-for-running-cadence-vs-speed">Scatterplot with Loess smoothing curve for running cadence vs
+speed<a class="anchor" aria-label="anchor" href="#scatterplot-with-loess-smoothing-curve-for-running-cadence-vs-speed"></a>
+</h3>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">xall</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">minutes</span>, y <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">cadence_running</span>, color <span class="op">=</span> <span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>  <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">150</span>, <span class="fl">200</span>, by <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Cadence (spm)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">16.5</span>, by <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Time (minutes)"</span>, </span>
+<span>                       sec.axis <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/sec_axis.html" class="external-link">sec_axis</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">.</span> <span class="op">/</span> <span class="fl">1.5</span> <span class="op">+</span> <span class="fl">6</span>, </span>
+<span>                                            name <span class="op">=</span> <span class="st">"speed (km/h)"</span>, </span>
+<span>                                            breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">16</span>, by <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span></span></code></pre></div>
+<p><img src="usage_files/figure-html/unnamed-chunk-12-1.png" width="624"></p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
