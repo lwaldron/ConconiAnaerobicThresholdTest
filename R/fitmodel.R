@@ -20,7 +20,7 @@
 #' @importFrom utils tail
 #'
 #' @examples
-#' fname = system.file(file = "extdata/2023-09-15.tcx", package = "TreadmillStepTest")
+#' fname = system.file(file = "extdata/2023-09-15.tcx", package = "TreadmillFitnessTest")
 #' # These plots can help get the start and end time correct.
 #' x0 <- prepdata(fname, useDeviceSpeed = TRUE)
 #' par(mfrow=c(2, 2))
@@ -88,7 +88,7 @@ prepdata <-
 #' @importFrom ggplot2 ggplot geom_point geom_line annotate
 #'
 #' @examples
-#' fname = system.file(file = "extdata/2023-09-15.tcx", package = "TreadmillStepTest")
+#' fname = system.file(file = "extdata/2023-09-15.tcx", package = "TreadmillFitnessTest")
 #' x1 <- prepdata(fname, startminutes = 23.8, endminutes = 40.1,
 #'          useDeviceSpeed = FALSE)
 #' fitmodel(x1)
