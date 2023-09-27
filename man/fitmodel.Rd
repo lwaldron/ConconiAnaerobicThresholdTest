@@ -4,13 +4,15 @@
 \alias{fitmodel}
 \title{Fit piecewise linear model}
 \usage{
-fitmodel(dat, alldata = FALSE)
+fitmodel(dat, alldata = FALSE, textsize = 5)
 }
 \arguments{
 \item{dat}{data.frame output by the prepdata() function}
 
 \item{alldata}{If FALSE (default), only the final 5 heart rate measurements
 of each step are used to fit the changepoint model. If TRUE, all data are used.}
+
+\item{textsize}{size of the breakpoint speed & pace text printed on plot (default: 5)}
 }
 \value{
 creates a plot showing the piecewise fit and breakpoint

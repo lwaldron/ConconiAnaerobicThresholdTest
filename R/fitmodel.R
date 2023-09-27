@@ -12,6 +12,12 @@
 #' @return a data.frame with early and late times potentially trimmed, and
 #' speed potentially over-ridden with manually set step values.
 #' @export
+#' @importFrom SiZer piecewise.linear
+#' @importFrom dplyr select mutate group_by filter arrange
+#' @importFrom ggplot2 ggplot geom_point geom_line annotate aes
+#' @importFrom methods show
+#' @importFrom stats time
+#' @importFrom utils tail
 #'
 #' @examples
 #' fname = system.file(file = "extdata/2023-09-15.tcx", package = "TreadmillStepTest")
@@ -29,7 +35,6 @@
 #' plot(x1$minutes, x1$speed)
 #' plot(x1$minutes, x1$cadence_running)
 #' plot(x1$minutes, x1$heart_rate)
-#' library(SiZer)
 #' # Fit and plot HR vs time, with ALL HR measurements
 #' (fit <- piecewise.linear(x=x1$speed, y=x1$heart_rate, CI = TRUE))
 #' fitdat <- data.frame(speed = fit$x, heart_rate = fit$y)
@@ -37,9 +42,9 @@
 #'     geom_point() +
 #'     geom_line(data = fitdat, aes(x=speed, y = heart_rate), col = "red", linewidth = 1)
 #' # Using only the average of the last 5 HR measurements in each step
-#' x2 <- group_by(x1, speed) %>%
-#'     mutate(heart_rate = mean(tail(heart_rate, 5))) %>%
-#'         select(speed, heart_rate) %>%
+#' x2 <- group_by(x1, speed) |>
+#'     mutate(heart_rate = mean(tail(heart_rate, 5))) |>
+#'         select(speed, heart_rate) |>
 #'             unique()
 #' (fit2 <- piecewise.linear(x=x2$speed, y=x2$heart_rate, CI = TRUE))
 #' fitdat2 <- data.frame(speed = fit2$x, heart_rate = fit2$y)
@@ -78,6 +83,9 @@ prepdata <-
 #'
 #' @return creates a plot showing the piecewise fit and breakpoint
 #' @export
+#' @importFrom dplyr select group_by mutate
+#' @importFrom SiZer piecewise.linear
+#' @importFrom ggplot2 ggplot geom_point geom_line annotate
 #'
 #' @examples
 #' fname = system.file(file = "extdata/2023-09-15.tcx", package = "TreadmillStepTest")
@@ -85,14 +93,13 @@ prepdata <-
 #'          useDeviceSpeed = FALSE)
 #' fitmodel(x1)
 fitmodel <- function(dat, alldata=FALSE, textsize=5){
-    data <- select(dat, speed, heart_rate)
+    dat <- select(dat, speed, heart_rate)
     if (!alldata) {
         # Use only the average of the last 5 HR measurements in each step
-        dat <- group_by(dat, speed) %>%
-            mutate(heart_rate = mean(tail(heart_rate, 5))) %>%
+        dat <- group_by(dat, speed) |>
+            mutate(heart_rate = mean(tail(heart_rate, 5))) |>
             unique()
     }
-    library(SiZer)
     fit <- piecewise.linear(x=dat$speed, y=dat$heart_rate, CI = FALSE)
     message(show(fit))
     fitdat2 <- data.frame(speed = fit$x, heart_rate = fit$y)
@@ -104,3 +111,7 @@ fitmodel <- function(dat, alldata=FALSE, textsize=5){
         annotate(geom = 'text', label = spd, x = Inf, y = -Inf, hjust = 1.1, vjust = -1, size=textsize) +
         annotate(geom = 'text', label = pace, x = Inf, y = -Inf, hjust = 1.1, vjust = -2.5, size=textsize)
 }
+
+heart_rate = NULL
+speed = NULL
+minutes = NULL
