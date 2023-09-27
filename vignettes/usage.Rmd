@@ -17,14 +17,41 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Performing the test
+
+Use a chest strap heart rate monitor if available.
+
+1. warm up by jogging on the treadmill at a slow speed for 10 minutes.
+2. rest for 10 minutes with light static or dynamic stretching
+3. start at a low speed where you can still jog, not run, and have several steps
+before you hit your anaerobic threshold. 6km/h is a likely choice. km/h is likely better than mph for the smaller steps in speed.
+4. spend 90 seconds at each speed. After 90 seconds, increase the speed by 1 km/h
+5. continue until exhaustion, when you can no longer maintain the speed. 
+The test ends and the end of the last segment where the full 90 seconds are 
+completed.
+
+At the end of the test, you can remain still for several minutes with the 
+heart rate monitor still recording, to separately measure and compare rate
+of recovery. Analysis of heart rate recovery isn't currently handled by this package however. 
+
+# Exporting the Garmin TCX file
+
+Open the workout in the web version of [Garmin Connect](https://connect.garmin.com). Click the gearbox in the upper right-hand side:
+
+![Click the gearbox in Garmin Connect's workout view](Screenshot-wideangle.png)
+
+Then, export to TCX:
+
+![](Screenshot-menu.png)
+
+# How to figure out startminutes and endminutes
+
+Useful in case the run was started before the start of the actual step test, or ended after.
+
 ```{r setup, message=FALSE}
 library(TreadmillFitnessTest)
 ```
 
-# How to figure out startminutes and endminutes
-
-Useful in case the run was started before the start of the actual step test,
-or ended after.
 ```{r}
 fname = system.file("extdata/2023-01-16.tcx", package = "TreadmillFitnessTest")
 tmp <- prepdata(fname, startminutes = 0, endminutes = 100,
@@ -34,9 +61,7 @@ plot(tmp$minutes, tmp$cadence_running)
 plot(tmp$minutes, tmp$heart_rate)
 ```
 
-By iteratively adjusting the `startminutes` and `endminutes` and replotting, or
-just replotting with adjusted axes, I found that the correct start time was at 
-0.15 minutes and correct end time at 15 minutes.
+By iteratively adjusting the `startminutes` and `endminutes` and replotting, or just replotting with adjusted axes, I found that the correct start time was at 0.15 minutes and correct end time at 15 minutes.
 
 # January 2023 test
 
@@ -57,11 +82,13 @@ plot(dat202301$minutes, dat202301$heart_rate)
 ## Model fitting
 
 This model uses all available data points:
+
 ```{r}
 fitmodel(dat202301, alldata = TRUE)
 ```
 
 And this model uses only the final 5 measurements in each step:
+
 ```{r}
 fitmodel(dat202301, alldata = FALSE)
 ```
@@ -83,18 +110,15 @@ fitmodel(dat202309, alldata = TRUE)
 fitmodel(dat202309, alldata = FALSE)
 ```
 
-
 # 2022-23 together
 
-Some plots demonstrating comparison of two tests. First join the two data.frames,
-and convert date and speed to factors (to make plots appear the way I want them to).
+Some plots demonstrating comparison of two tests. First join the two data.frames, and convert date and speed to factors (to make plots appear the way I want them to).
 
 ```{r}
 xall <- full_join(x=dat202309, y=dat202301) |>
     mutate(date = factor(date)) |>
     mutate(speed = factor(speed))
 ```
-
 
 ## Boxplot of heart rate vs speed
 
@@ -103,6 +127,7 @@ ggplot(xall, aes(x=speed, y=heart_rate, fill = date)) +
     geom_boxplot()  +
     scale_y_continuous(breaks=seq(90, 200, by=10))
 ```
+
 ## Scatterplot with Loess smoothing curve for heart rate vs speed
 
 ```{r, fig.width=6.5, fig.height=6.3}
