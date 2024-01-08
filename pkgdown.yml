@@ -3,8 +3,8 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   usage: usage.html
-last_built: 2024-01-08T10:27Z
+last_built: 2024-01-08T10:50Z
 urls:
-  reference: https://lwaldron.github.io/TreadmillFitnessTest/reference
-  article: https://lwaldron.github.io/TreadmillFitnessTest/articles
+  reference: https://lwaldron.github.io/ConconiAnaerobicThresholdTest/reference
+  article: https://lwaldron.github.io/ConconiAnaerobicThresholdTest/articles
 
