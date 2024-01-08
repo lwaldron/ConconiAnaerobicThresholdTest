@@ -23,7 +23,7 @@ creates a plot showing the piecewise fit and breakpoint
 Fit piecewise linear model
 }
 \examples{
-fname = system.file(file = "extdata/2023-09-15.tcx", package = "TreadmillFitnessTest")
+fname = system.file(file = "extdata/2023-09-15.tcx", package = "ConconiAnaerobicThresholdTest")
 x1 <- prepdata(fname, startminutes = 23.8, endminutes = 40.1,
          useDeviceSpeed = FALSE)
 fitmodel(x1)

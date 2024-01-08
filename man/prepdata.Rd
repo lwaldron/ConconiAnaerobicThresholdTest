@@ -25,7 +25,7 @@ prepdata(
 
 \item{speedstep}{(default: 1 km/h) Speed increment of each step}
 
-\item{timestep}{(default: 1.5 minutes) Length of time of each step}
+\item{timestep}{(default: 1.5 minutes) Length of time of each step in minutes}
 
 \item{useDeviceSpeed}{(default: FALSE) If TRUE, use the speed as returned by
 the device instead of the manually-set step speeds}
@@ -37,8 +37,20 @@ speed potentially over-ridden with manually set step values.
 \description{
 Load, trim, fit, and display model
 }
+\details{
+Actually you don't need to import a TCX file, what matters for the
+`fitmodel()` function is that the data.frame has columns `time`, `heart_rate`,
+and optionally `speed`.
+
+If you import a TCX file that is not from Garmin, you may need to rename the
+column containing heart rate to `heart_rate` and the column containing
+time to `time`. The `time` column should be in seconds or a format that
+can be coerced to seconds using `as.numeric()`, such as the POSIXct/POSIXlt
+formats that most services likely provide. If `useDeviceSpeed` is FALSE, then
+the speed column should be `speed`.
+}
 \examples{
-fname = system.file(file = "extdata/2023-09-15.tcx", package = "TreadmillFitnessTest")
+fname = system.file(file = "extdata/2023-09-15.tcx", package = "ConconiAnaerobicThresholdTest")
 # These plots can help get the start and end time correct.
 x0 <- prepdata(fname, useDeviceSpeed = TRUE)
 par(mfrow=c(2, 2))

@@ -1,8 +1,7 @@
-Package: TreadmillFitnessTest
+Package: ConconiAnaerobicThresholdTest
 Type: Package
-Title: Conconi et al. Estimate of Anaerobic Threshold from TCX file of a Treadmill Stepwise 
-    Fitness Test
-Version: 0.1.1
+Title: Conconi et al. Estimate of Anaerobic Threshold from Garmin TCX File
+Version: 0.1.2
 Author: Levi Waldron
 Maintainer: Levi Waldron <levi.waldron@sph.cuny.edu>
 Description: Analyzes data from a Conconi et al. treadmill fitness test where 
@@ -22,4 +21,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://lwaldron.github.io/TreadmillFitnessTest/
+URL: https://lwaldron.github.io/ConconiAnaerobicThresholdTest/

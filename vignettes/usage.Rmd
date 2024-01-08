@@ -1,9 +1,9 @@
 ---
-title: "Analysis of treadmill fitness test data"
+title: "Analysis of Garmin TCX data for Conconi anaerobic threshold test"
 output: rmarkdown::html_vignette
 bibliography: usage.bib  
 vignette: >
-  %\VignetteIndexEntry{Analysis of treadmill fitness test data}
+  %\VignetteIndexEntry{Analysis of Conconi anaerobic threshold test data}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -45,16 +45,27 @@ Then, export to TCX:
 
 ![](Screenshot-menu.png){width="183"}
 
+# Non-Garmin data
+
+Actually you don't need to import a TCX file, what matters for the
+`fitmodel()` function is that you provide a data.frame with columns `time`, `heart_rate`, and optionally `speed`.
+
+If you import a TCX file that is not from Garmin Connect, you may need to rename the column containing heart rate to `heart_rate` and the column containing
+time to  `time`. The `time` column should be in seconds or a format that
+can be coerced to seconds using `as.numeric()`, such as the POSIXct/POSIXlt
+formats that most services likely provide. If `useDeviceSpeed` is FALSE, then
+the speed column should be `speed`.
+
 # How to figure out startminutes and endminutes
 
 Useful in case the run was started before the start of the actual step test, or ended after.
 
 ```{r setup, message=FALSE}
-library(TreadmillFitnessTest)
+library(ConconiAnaerobicThresholdTest)
 ```
 
 ```{r}
-fname = system.file("extdata/2023-01-16.tcx", package = "TreadmillFitnessTest")
+fname = system.file("extdata/2023-01-16.tcx", package = "ConconiAnaerobicThresholdTest")
 tmp <- prepdata(fname, startminutes = 0, endminutes = 100,
           useDeviceSpeed = TRUE)
 plot(tmp$minutes, tmp$speed)
@@ -97,7 +108,7 @@ fitmodel(dat202301, alldata = FALSE, title = "January 2023, using only last 5 HR
 # Sept 15, 2023 test
 
 ```{r}
-fname = system.file("extdata/2023-09-15.tcx", package = "TreadmillFitnessTest")
+fname = system.file("extdata/2023-09-15.tcx", package = "ConconiAnaerobicThresholdTest")
 dat202309 <- prepdata(fname, startminutes = 23.8, endminutes = 40.1,
           useDeviceSpeed = FALSE)
 dat202309$date = substr(dat202309$time[1], 1, 10)
@@ -114,7 +125,7 @@ fitmodel(dat202309, alldata = FALSE, title = "September 2023, using only last 5 
 # Jan 10, 2022 test
 
 ```{r}
-fname = system.file("extdata/2022-01-10.tcx", package = "TreadmillFitnessTest")
+fname = system.file("extdata/2022-01-10.tcx", package = "ConconiAnaerobicThresholdTest")
 dat202201 <- prepdata(fname, startminutes = 26, endminutes = 38.99,
           useDeviceSpeed = FALSE)
 dat202201$date = substr(dat202201$time[1], 1, 10)
