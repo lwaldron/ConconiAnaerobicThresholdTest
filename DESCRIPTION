@@ -1,11 +1,12 @@
 Package: TreadmillFitnessTest
 Type: Package
-Title: Estimate Anaerobic Threshold from a Treadmill Stepwise Fitness Test
-Version: 0.1.0
+Title: Conconi et al. Estimate of Anaerobic Threshold from TCX file of a Treadmill Stepwise 
+    Fitness Test
+Version: 0.1.1
 Author: Levi Waldron
 Maintainer: Levi Waldron <levi.waldron@sph.cuny.edu>
-Description: Analyzes data from a treadmill fitness test where speed is 
-    augmented by a constant amount every set number of seconds, to 
+Description: Analyzes data from a Conconi et al. treadmill fitness test where 
+    speed is augmented by a constant amount every set number of seconds to 
     estimate the anaerobic (lactate) threshold speed and heart rate. It reads a tcx 
     file, allows optional removal observations from before and after the actual test,
     fits a change-point linear model where the change-point is the estimate of 

@@ -1,6 +1,7 @@
 ---
 title: "Analysis of treadmill fitness test data"
 output: rmarkdown::html_vignette
+bibliography: usage.bib  
 vignette: >
   %\VignetteIndexEntry{Analysis of treadmill fitness test data}
   %\VignetteEncoding{UTF-8}
@@ -16,6 +17,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+# Background
+
+Rationale and validation for this method of estimating anaerobic threshold is described by @Conconi1996-hb, but also disputed e.g. by @Jeukendrup1997-kn and @Hofmann1997-vd (see [References]).
 
 # Performing the test
 
@@ -80,13 +85,13 @@ plot(dat202301$minutes, dat202301$heart_rate)
 This model uses all available data points:
 
 ```{r}
-fitmodel(dat202301, alldata = TRUE)
+fitmodel(dat202301, alldata = TRUE, title = "January 2023, using all HR data")
 ```
 
 And this model uses only the final 5 measurements in each step:
 
 ```{r}
-fitmodel(dat202301, alldata = FALSE)
+fitmodel(dat202301, alldata = FALSE, title = "January 2023, using only last 5 HR measurements of each step")
 ```
 
 # Sept 15, 2023 test
@@ -102,8 +107,24 @@ with(dat202309, plot(minutes, speed))
 ## Model fitting
 
 ```{r}
-fitmodel(dat202309, alldata = TRUE)
-fitmodel(dat202309, alldata = FALSE)
+fitmodel(dat202309, alldata = TRUE, title = "September 2023, using all HR data")
+fitmodel(dat202309, alldata = FALSE, title = "September 2023, using only last 5 HR measurements of each step")
+```
+
+# Jan 10, 2022 test
+
+```{r}
+fname = system.file("extdata/2022-01-10.tcx", package = "TreadmillFitnessTest")
+dat202201 <- prepdata(fname, startminutes = 26, endminutes = 38.99,
+          useDeviceSpeed = FALSE)
+dat202201$date = substr(dat202201$time[1], 1, 10)
+```
+
+## Model fitting
+
+```{r}
+fitmodel(dat202201, alldata = TRUE, title = "January 2022, using all HR data")
+fitmodel(dat202201, alldata = FALSE, title = "January 2022, using only last 5 HR measurements of each step")
 ```
 
 # 2022-23 together
@@ -112,6 +133,7 @@ Some plots demonstrating comparison of two tests. First join the two data.frames
 
 ```{r}
 xall <- full_join(x=dat202309, y=dat202301) |>
+    full_join(y=dat202201) |>
     mutate(date = factor(date)) |>
     mutate(speed = factor(speed))
 ```
@@ -140,12 +162,22 @@ ggplot(xall, aes(x = minutes, y = heart_rate, color = date)) +
 ## Scatterplot with Loess smoothing curve for running cadence vs speed
 
 ```{r, fig.width=6.5, fig.height=6.3}
-ggplot(xall, aes(x = minutes, y = 2 * cadence_running, color = date)) +
+filter(xall, date != "2022-01-10") |> # bad cadence data from 2022-01-10
+    ggplot(aes(
+        x = as.numeric(as.character(speed)),
+        y = 2 * cadence_running,
+        color = date
+    )) +
     geom_point(size = 0.5)  +
     geom_smooth() +
     scale_y_continuous(breaks = seq(150, 200, by = 10), name = "Cadence (spm)") +
-    scale_x_continuous(breaks = seq(0, 16.5, by = 1.5), name = "Time (minutes)", 
-                       sec.axis = sec_axis( ~ . / 1.5 + 6, 
-                                            name = "speed (km/h)", 
-                                            breaks = seq(6, 16, by = 1)))
+    scale_x_continuous(
+        breaks = seq(0, 16.5, by = 1),
+        name = "speed (km/h)",
+        sec.axis = sec_axis(~ . / 1.5 + 6,
+                            name = "speed (km/h)",
+                            breaks = seq(6, 16, by = 1))
+    )
 ```
+
+# References

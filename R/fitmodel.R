@@ -63,6 +63,7 @@ prepdata <-
 #' @param alldata If FALSE (default), only the final 5 heart rate measurements
 #' of each step are used to fit the changepoint model. If TRUE, all data are used.
 #' @param textsize size of the breakpoint speed & pace text printed on plot (default: 5)
+#' @param title title of plot (default: '')
 #'
 #' @return creates a plot showing the piecewise fit and breakpoint
 #' @export
@@ -75,7 +76,7 @@ prepdata <-
 #' x1 <- prepdata(fname, startminutes = 23.8, endminutes = 40.1,
 #'          useDeviceSpeed = FALSE)
 #' fitmodel(x1)
-fitmodel <- function(dat, alldata=FALSE, textsize=5){
+fitmodel <- function(dat, alldata=FALSE, textsize=5, title=""){
     dat <- select(dat, speed, heart_rate)
     if (!alldata) {
         # Use only the average of the last 5 HR measurements in each step
@@ -88,11 +89,16 @@ fitmodel <- function(dat, alldata=FALSE, textsize=5){
     fitdat2 <- data.frame(speed = fit$x, heart_rate = fit$y)
     spd <- paste(round(fit[[1]], 1), "km/h")
     pace <- paste(round(60/fit[[1]], 1), "min/km")
+    hr <- paste(round(fit$y[max(which(fit$x < fit$change.point))]), "bpm")
     ggplot(dat, aes(x=speed, y=heart_rate)) +
         geom_point() +
         geom_line(data = fitdat2, aes(x=speed, y = heart_rate), col = "red", linewidth = 1) +
         annotate(geom = 'text', label = spd, x = Inf, y = -Inf, hjust = 1.1, vjust = -1, size=textsize) +
-        annotate(geom = 'text', label = pace, x = Inf, y = -Inf, hjust = 1.1, vjust = -2.5, size=textsize)
+        annotate(geom = 'text', label = pace, x = Inf, y = -Inf, hjust = 1.1, vjust = -2.5, size=textsize) +
+        annotate(geom = 'text', label = hr, x = Inf, y = -Inf, hjust = 1.1, vjust = -4, size=textsize) +
+        xlab("Speed (km/h)") +
+        ylab("Heart rate (bpm)") +
+        ggtitle(title)
 }
 
 heart_rate = NULL
