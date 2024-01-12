@@ -30,17 +30,20 @@
 #' @importFrom utils tail
 #'
 #' @examples
-#' fname = system.file(file = "extdata/2023-09-15.tcx", package = "ConconiAnaerobicThresholdTest")
+#' # Note, files in this package are gzipped to save space. TCX files exported
+#' # from Garmin Connect or others will not have the `.gz` extension and you
+#' # should not use `gzfile()`.
+#' fname = system.file(file = "extdata/2023-09-15.tcx.gz",
+#'                     package = "ConconiAnaerobicThresholdTest")
 #' # These plots can help get the start and end time correct.
-#' x0 <- prepdata(fname, useDeviceSpeed = TRUE)
-#' oldpar <- par()
-#' par(mfrow=c(2, 2))
+#' x0 <- prepdata(gzfile(fname), useDeviceSpeed = TRUE)
+#' oldpar <- par(mfrow=c(2, 2))
 #' plot(x0$minutes, x0$speed)
 #' plot(x0$minutes, x0$cadence_running)
 #' plot(x0$minutes, x0$heart_rate)
 #' # Once you have start and end times correct, set useDeviceSpeed = FALSE
 #' # if speeds were set manually on the treadmill.
-#' x1 <- prepdata(fname, startminutes = 23.8, endminutes = 40.1,
+#' x1 <- prepdata(gzfile(fname), startminutes = 23.8, endminutes = 40.1,
 #'          useDeviceSpeed = FALSE)
 #' par(mfrow=c(2, 2))
 #' plot(x1$minutes, x1$speed)
@@ -85,8 +88,11 @@ prepdata <-
 #' @importFrom ggplot2 ggplot geom_point geom_line annotate xlab ylab ggtitle
 #'
 #' @examples
-#' fname = system.file(file = "extdata/2023-09-15.tcx", package = "ConconiAnaerobicThresholdTest")
-#' x1 <- prepdata(fname, startminutes = 23.8, endminutes = 40.1,
+#' # Note, files in this package are gzipped to save space. TCX files exported
+#' # from Garmin Connect or others will not have the `.gz` extension and you
+#' # should not use `gzfile()`.
+#' fname = system.file(file = "extdata/2023-09-15.tcx.gz", package = "ConconiAnaerobicThresholdTest")
+#' x1 <- prepdata(gzfile(fname), startminutes = 23.8, endminutes = 40.1,
 #'          useDeviceSpeed = FALSE)
 #' fitmodel(x1)
 fitmodel <- function(dat, alldata=FALSE, textsize=5, title=""){
