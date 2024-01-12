@@ -23,8 +23,11 @@ creates a plot showing the piecewise fit and breakpoint
 Fit piecewise linear model
 }
 \examples{
-fname = system.file(file = "extdata/2023-09-15.tcx", package = "ConconiAnaerobicThresholdTest")
-x1 <- prepdata(fname, startminutes = 23.8, endminutes = 40.1,
+# Note, files in this package are gzipped to save space. TCX files exported
+# from Garmin Connect or others will not have the `.gz` extension and you
+# should not use `gzfile()`.
+fname = system.file(file = "extdata/2023-09-15.tcx.gz", package = "ConconiAnaerobicThresholdTest")
+x1 <- prepdata(gzfile(fname), startminutes = 23.8, endminutes = 40.1,
          useDeviceSpeed = FALSE)
 fitmodel(x1)
 }

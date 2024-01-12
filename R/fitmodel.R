@@ -33,6 +33,7 @@
 #' fname = system.file(file = "extdata/2023-09-15.tcx", package = "ConconiAnaerobicThresholdTest")
 #' # These plots can help get the start and end time correct.
 #' x0 <- prepdata(fname, useDeviceSpeed = TRUE)
+#' oldpar <- par()
 #' par(mfrow=c(2, 2))
 #' plot(x0$minutes, x0$speed)
 #' plot(x0$minutes, x0$cadence_running)
@@ -45,6 +46,7 @@
 #' plot(x1$minutes, x1$speed)
 #' plot(x1$minutes, x1$cadence_running)
 #' plot(x1$minutes, x1$heart_rate)
+#' par(oldpar)
 prepdata <-
     function(fname,
              startminutes = 0,

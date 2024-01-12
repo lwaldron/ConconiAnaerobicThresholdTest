@@ -2,17 +2,19 @@ Package: ConconiAnaerobicThresholdTest
 Type: Package
 Title: Conconi et al. Estimate of Anaerobic Threshold from a TCX File
 Version: 1.0.0
-Author: Levi Waldron
+Authors@R: person("Levi", "Waldron", email = "lwaldron.research@gmail.com",
+    role = c("aut", "cre"))
 Maintainer: Levi Waldron <lwaldron.research@gmail.com>
-Description: Analyzes data from a Conconi et al. treadmill fitness test where 
-    speed is augmented by a constant amount every set number of seconds to 
-    estimate the anaerobic (lactate) threshold speed and heart rate. It reads a TCX 
-    file, allows optional removal observations from before and after the actual test,
-    fits a change-point linear model where the change-point is the estimate of 
-    the lactate threshold, and plots the data points and fit model. Details of 
-    administering the fitness test are provided in the package vignette. Functions
-    work by default for Garmin Connect TCX exports but may require additional 
-    data preparation for heart rate, time, and speed data from other sources.
+Description: Analyzes data from a Conconi et al. (1996) <doi:10.1055/s-2007-972887>
+    treadmill fitness test where speed is augmented by a constant amount every
+    set number of seconds to estimate the anaerobic (lactate) threshold speed
+    and heart rate. It reads a TCX file, allows optional removal observations
+    from before and after the actual test, fits a change-point linear model
+    where the change-point is the estimate of the lactate threshold, and plots
+    the data points and fit model. Details of administering the fitness test are
+    provided in the package vignette. Functions work by default for Garmin
+    Connect TCX exports but may require additional data preparation for heart
+    rate, time, and speed data from other sources.
 License: GPL (>= 3)
 Depends: dplyr, ggplot2
 Imports: trackeR, SiZer, methods

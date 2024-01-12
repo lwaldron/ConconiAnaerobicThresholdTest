@@ -64,9 +64,13 @@ Useful in case the run was started before the start of the actual step test, or 
 library(ConconiAnaerobicThresholdTest)
 ```
 
+Note, files in this package are gzipped to save space. TCX files exported as 
+above will not have the `.gz` extension and you should not use the `gzfile()`
+adapter used below. 
+
 ```{r}
-fname = system.file("extdata/2023-01-16.tcx", package = "ConconiAnaerobicThresholdTest")
-tmp <- prepdata(fname, startminutes = 0, endminutes = 100,
+fname = system.file("extdata/2023-01-16.tcx.gz", package = "ConconiAnaerobicThresholdTest")
+tmp <- prepdata(gzfile(fname), startminutes = 0, endminutes = 100,
           useDeviceSpeed = TRUE)
 plot(tmp$minutes, tmp$speed)
 plot(tmp$minutes, tmp$cadence_running)
@@ -80,7 +84,7 @@ By iteratively adjusting the `startminutes` and `endminutes` and replotting, or 
 Import the data and show the same plots.
 
 ```{r}
-dat202301 <- prepdata(fname, startminutes = 0.15, endminutes = 15,
+dat202301 <- prepdata(gzfile(fname), startminutes = 0.15, endminutes = 15,
           useDeviceSpeed = FALSE)
 (dat202301$date = substr(dat202301$time[1], 1, 10))
 ```
@@ -108,8 +112,9 @@ fitmodel(dat202301, alldata = FALSE, title = "January 2023, using only last 5 HR
 # Sept 15, 2023 test
 
 ```{r}
-fname = system.file("extdata/2023-09-15.tcx", package = "ConconiAnaerobicThresholdTest")
-dat202309 <- prepdata(fname, startminutes = 23.8, endminutes = 40.1,
+fname = system.file("extdata/2023-09-15.tcx.gz", 
+                    package = "ConconiAnaerobicThresholdTest")
+dat202309 <- prepdata(gzfile(fname), startminutes = 23.8, endminutes = 40.1,
           useDeviceSpeed = FALSE)
 dat202309$date = substr(dat202309$time[1], 1, 10)
 with(dat202309, plot(minutes, speed))
@@ -125,8 +130,9 @@ fitmodel(dat202309, alldata = FALSE, title = "September 2023, using only last 5 
 # Jan 10, 2022 test
 
 ```{r}
-fname = system.file("extdata/2022-01-10.tcx", package = "ConconiAnaerobicThresholdTest")
-dat202201 <- prepdata(fname, startminutes = 26, endminutes = 38.99,
+fname = system.file("extdata/2022-01-10.tcx.gz",
+                    package = "ConconiAnaerobicThresholdTest")
+dat202201 <- prepdata(gzfile(fname), startminutes = 26, endminutes = 38.99,
           useDeviceSpeed = FALSE)
 dat202201$date = substr(dat202201$time[1], 1, 10)
 ```
