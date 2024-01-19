@@ -1,6 +1,6 @@
 Package: ConconiAnaerobicThresholdTest
 Type: Package
-Title: Conconi et al. Estimate of Anaerobic Threshold from a TCX File
+Title: Conconi Estimate of Anaerobic Threshold from a TCX File
 Version: 1.0.0
 Authors@R: person("Levi", "Waldron", email = "lwaldron.research@gmail.com",
     role = c("aut", "cre"))
