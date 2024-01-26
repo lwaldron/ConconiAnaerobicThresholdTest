@@ -22,6 +22,21 @@ knitr::opts_chunk$set(
 
 Rationale and validation for this method of estimating anaerobic threshold is described by @Conconi1996-hb, but also disputed e.g. by @Jeukendrup1997-kn and @Hofmann1997-vd (see [References]).
 
+# What this software does
+
+This software provides two functions: 
+
+1. `prepdata()` reads in a TCX file exported from Garmin Connect, Polar Flow, and
+probably other fitness apps that record heart rate. It also provides settings for 
+the test, such as the start and end time, and the speed and time increments.
+2. `fitmodel()` fits a changepoint model with two linear regression lines that
+intersect at the estimated anaerobic threshold.
+
+# How to use this software
+
+You can either install it as an R package from CRAN, or use it as an interactive
+web app at https://leviwaldron.shinyapps.io/ConconiAnaerobicThresholdTest/. 
+
 # Performing the test
 
 Use a chest strap heart rate monitor if available.

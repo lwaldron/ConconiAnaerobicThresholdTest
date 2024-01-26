@@ -20,7 +20,7 @@ ui <- fluidPage(tags$html(
         a treadmill stepwise exhaustion test, where speed is in constant steps
         regular time intervals. See',
     a(href = "https://waldronlab.io/ConconiAnaerobicThresholdTest/articles/usage.html",
-      "instructions for performing the test"),
+      "instructions for performing the test and how this analysis is performed"),
     " and an ",
     a(
       href = "https://github.com/waldronlab/ConconiAnaerobicThresholdTest/raw/d58d5e9980bf38f07b1d4bb3557ceaee5ff18ccd/inst/extdata/2023-01-16.tcx",
@@ -28,9 +28,9 @@ ui <- fluidPage(tags$html(
       target = "_blank",
       "example TCX file"
     ),
-    " (pre-loaded). In this example, speed started at 6km/h and was increased by 
+    " (pre-loaded). In this example, speed started at 6km/h and was increased by
     1km/h every 1.5 minutes for 10 steps (15 minutes total), on a treadmill with
-    1% incline to compensate for lack of air resistance. For correct analysis of 
+    1% incline to compensate for lack of air resistance. For correct analysis of
     this example dataset, ",
     strong("start"),
     " at minute 0.15, ",
@@ -90,7 +90,7 @@ sidebarLayout(
       value = 8
     )
   ),
-  
+
   # Show a plot of the generated distribution
   mainPanel(plotOutput("distPlot"))
 )
